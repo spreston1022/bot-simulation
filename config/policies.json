@@ -1,3 +1,29 @@
 {
-  "policies": []
+  "policies": [
+    {
+      "name": "overall-rate-bot-block",
+      "policyType": "custom-code-inbound",
+      "handler": {
+        "export": "default",
+        "module": "$import(./modules/overall-rate-bot-block)"
+      }
+    },
+    {
+      "name": "bot-score-rate-limit",
+      "policyType": "rate-limit-inbound",
+      "handler": {
+        "export": "RateLimitInboundPolicy",
+        "module": "$import(@zuplo/runtime)",
+        "options": {
+          "rateLimitBy": "function",
+          "requestsAllowed": 50,
+          "timeWindowMinutes": 0.1,
+          "identifier": {
+            "export": "rateLimitKey",
+            "module": "$import(./modules/bot-score-rate-limit)"
+          }
+        }
+      }
+    }
+  ]
 }

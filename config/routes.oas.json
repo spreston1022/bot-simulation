@@ -22,7 +22,7 @@
             }
           },
           "policies": {
-            "inbound": []
+            "inbound": ["overall-rate-bot-block", "bot-score-rate-limit"]
           }
         },
         "operationId": "rest-80d8c0f4"
