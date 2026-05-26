@@ -1,8 +1,5 @@
 import { ZoneCache, ZuploContext, ZuploRequest } from "@zuplo/runtime";
 
-const OVERALL_THRESHOLD = 50; // req per 0.1 min (6s) before high-score bots are blocked
-const BOT_SCORE_THRESHOLD = 75;
-
 export default async function (request: ZuploRequest, context: ZuploContext) {
   const cache = new ZoneCache("overall-rate-bot-block", context);
 
@@ -15,13 +12,20 @@ export default async function (request: ZuploRequest, context: ZuploContext) {
   // Increment counter — TTL of 15s ensures it outlives the 6s window
   cache.put(countKey, current + 1, 15);
 
-  if (current >= OVERALL_THRESHOLD) {
+  let botScoreThreshold: number | null = null;
+  if (current >= 100) {
+    botScoreThreshold = 25;
+  } else if (current >= 75) {
+    botScoreThreshold = 50;
+  }
+
+  if (botScoreThreshold !== null) {
     const botScoreHeader = request.headers.get("x-bot-score");
     if (botScoreHeader) {
       const score = parseInt(botScoreHeader, 10);
-      if (!isNaN(score) && score > BOT_SCORE_THRESHOLD) {
+      if (!isNaN(score) && score > botScoreThreshold) {
         context.log.info(
-          { score, current },
+          { score, current, botScoreThreshold },
           "blocking high bot score under elevated traffic",
         );
         return new Response(
