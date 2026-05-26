@@ -31,7 +31,7 @@ export async function rateLimitKey(
   if (botScore <= 75) {
     return {
       key: `medium-${tlsFingerprint ?? "unknown"}`,
-      requestsAllowed: 20,
+      requestsAllowed: 10,
       timeWindowMinutes: 0.1,
     };
   }
