@@ -22,7 +22,7 @@ export async function rateLimitKey(
   if (botScore <= 50) {
     return {
       key: `low-${tlsFingerprint ?? "unknown"}`,
-      requestsAllowed: 50,
+      requestsAllowed: 25,
       timeWindowMinutes: 0.1,
     };
   }
