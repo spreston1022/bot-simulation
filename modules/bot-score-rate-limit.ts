@@ -19,7 +19,7 @@ export async function rateLimitKey(
   context.log.info({ botScore, tlsFingerprint });
 
   // 0–50: 50 req / 0.1 min
-  if (botScore <= 50) {
+  if (botScore < 50) {
     return {
       key: `low-${tlsFingerprint ?? "unknown"}`,
       requestsAllowed: 25,
